@@ -1,0 +1,84 @@
+/** 
+ * The stats module provides two simple classes -- Counter and Rater. 
+ * Counter...well, it counts. 
+ * Rater provides an average rating for a list of identifiers.
+ */
+
+var sys = require('sys');
+
+var stats = exports;
+
+/**
+ * The Counter keeps a list of identifiers and the number of 
+ * times the identifier has been referenced.
+ * @constructor
+ */
+stats.Counter = function() {
+    this.countables = {};	
+};
+
+stats.Counter.prototype = {
+    
+    /**
+     * Is the counter currently tracking the identifier?
+     * @returns true if tracking, false if not
+     */
+    identifierExists : function(identifier) {
+  	return this.countables.hasOwnProperty(identifier);
+    },
+
+    increment : function(identifier)
+    {	
+	var currentCount = 0;
+   	if(this.identifierExists(identifier))
+   	{
+	    currentCount = this.countables[identifier];
+   	}
+	this.countables[identifier] = ++currentCount;
+    },
+    
+    value : function(identifier) 
+    {
+  	return this.countables[identifier];
+    }
+ 	
+};
+
+/**
+ * The Counter keeps a list of identifiers and the number of 
+ * times the identifier has been referenced.
+ * @constructor
+ */
+stats.Rater = function() {
+    this.rateables = {};	
+};
+
+stats.Rater.prototype = {
+    
+    /**
+     * Is the rater currently tracking the identifier?
+     * @returns true if tracking, false if not
+     */
+    identifierExists : function(identifier) {
+  	return this.rateables.hasOwnProperty(identifier);
+    },
+
+    addRating : function(identifier, rating)
+    {	
+	var currentRateables = [];
+   	if(this.identifierExists(identifier))
+   	{
+	    currentRateables = this.rateables[identifier];
+   	}
+	currentRateables.push(rating)
+	this.rateables[identifier] = currentRateables;
+    },
+    
+    value : function(identifier) 
+    {
+	var ratings = this.rateables[identifier];
+	sys.puts(ratings.sum());
+	return ratings.sum()/ratings.length;
+    }
+
+};

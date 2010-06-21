@@ -1,0 +1,11 @@
+var stats = require('./stats'),
+    sys   = require('sys');
+
+var counter = new stats.Counter();
+
+counter.count('test');
+counter.count('test');
+counter.count('sam');
+
+sys.puts(counter.get('test'));
+sys.puts(counter.get('sam'));
